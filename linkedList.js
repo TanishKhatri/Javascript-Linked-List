@@ -1,4 +1,3 @@
-
 class LinkedList {
   headNode;
   currSize;
@@ -18,7 +17,7 @@ class LinkedList {
 
     let travelNode = this.headNode;
 
-    while(travelNode.nextNode !== null) {
+    while (travelNode.nextNode !== null) {
       travelNode = travelNode.nextNode;
     }
 
@@ -55,7 +54,7 @@ class LinkedList {
 
     let travelNode = this.headNode;
 
-    while(travelNode.nextNode !== null) {
+    while (travelNode.nextNode !== null) {
       travelNode = travelNode.nextNode;
     }
 
@@ -89,10 +88,10 @@ class LinkedList {
     }
 
     let travelNode = this.headNode;
-    while(travelNode.nextNode.nextNode !== null) {
+    while (travelNode.nextNode.nextNode !== null) {
       travelNode = travelNode.nextNode;
     }
-    
+
     //Travel Node = Second Last Node;
     const valueOfLastNode = travelNode.nextNode.value;
     travelNode.nextNode = null;
@@ -107,7 +106,7 @@ class LinkedList {
 
     let travelNode = this.headNode;
 
-    while(travelNode !== null) {
+    while (travelNode !== null) {
       if (travelNode.value === value) return true;
       travelNode = travelNode.nextNode;
     }
@@ -123,7 +122,7 @@ class LinkedList {
     let index = 0;
     let travelNode = this.headNode;
 
-    while(travelNode !== null) {
+    while (travelNode !== null) {
       if (travelNode.value === value) return index;
       travelNode = travelNode.nextNode;
       index++;
@@ -188,7 +187,7 @@ class LinkedList {
 
     let listString = "";
     let travelNode = this.headNode;
-    while(travelNode !== null) {
+    while (travelNode !== null) {
       listString += `( ${travelNode.value} ) -> `;
       travelNode = travelNode.nextNode;
     }
@@ -209,4 +208,4 @@ class Node {
   }
 }
 
-export {LinkedList};
+export { LinkedList };
