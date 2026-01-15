@@ -1,20 +1,22 @@
 
 class LinkedList {
   headNode;
+  currSize;
 
   constructor() {
     this.headNode = null;
+    this.currSize = 0;
   }
 
   append(value) {
     if (this.headNode === null) {
       this.headNode = new Node();
       this.headNode.value = value;
+      this.currSize++;
       return;
     }
 
-    let travelNode = new Node();
-    travelNode.nextNode = this.headNode;
+    let travelNode = this.headNode;
 
     while(travelNode.nextNode !== null) {
       travelNode = travelNode.nextNode;
@@ -23,6 +25,7 @@ class LinkedList {
     let newNode = new Node();
     newNode.value = value;
     travelNode.nextNode = newNode;
+    this.currSize++;
   }
 
   prepend(value) {
@@ -30,19 +33,11 @@ class LinkedList {
     newNode.value = value;
     newNode.nextNode = this.headNode;
     this.headNode = newNode;
+    this.currSize++;
   }
 
   size() {
-    let sizeCount = 0;
-    let travelNode = new Node();
-    travelNode.nextNode = this.headNode;
-
-    while(travelNode.nextNode !== null) {
-      sizeCount++;
-      travelNode = travelNode.nextNode;
-    }
-
-    return sizeCount;
+    return this.currSize;
   }
 
   head() {
@@ -58,8 +53,7 @@ class LinkedList {
       return undefined;
     }
 
-    let travelNode = new Node();
-    travelNode = this.headNode;
+    let travelNode = this.headNode;
 
     while(travelNode.nextNode !== null) {
       travelNode = travelNode.nextNode;
@@ -69,22 +63,17 @@ class LinkedList {
   }
 
   at(index) {
-    if (this.headNode === null) {
+    if (index < 0 || index > this.currSize - 1) {
       return undefined;
     }
 
-    let travelNode = new Node();
-    travelNode = this.headNode;
+    let travelNode = this.headNode;
 
-    for (let i = 0; (i < index) && (travelNode !== null); i++) {
+    for (let i = 0; i < index; i++) {
       travelNode = travelNode.nextNode;
     }
 
-    if (travelNode === null) {
-      return undefined
-    } else {
-      return travelNode.value;
-    }
+    return travelNode.value;
   }
 
   pop() {
@@ -92,23 +81,35 @@ class LinkedList {
       return undefined;
     }
 
-    let nodeHead = this.headNode;
-    this.headNode = this.headNode.nextNode;
+    if (this.headNode.nextNode === null) {
+      const value = this.headNode.value;
+      this.headNode = null;
+      this.currSize--;
+      return value;
+    }
 
-    return nodeHead.value;
+    let travelNode = this.headNode;
+    while(travelNode.nextNode.nextNode !== null) {
+      travelNode = travelNode.nextNode;
+    }
+    
+    //Travel Node = Second Last Node;
+    const valueOfLastNode = travelNode.nextNode.value;
+    travelNode.nextNode = null;
+    this.currSize--;
+    return valueOfLastNode;
   }
 
   contains(value) {
-    if (this.headNodeNode === null) {
+    if (this.headNode === null) {
       return false;
     }
 
-    let travelNode = new Node();
-    travelNode.nextNode = this.headNode;
+    let travelNode = this.headNode;
 
-    while(travelNode.nextNode !== null) {
-      travelNode = travelNode.nextNode;
+    while(travelNode !== null) {
       if (travelNode.value === value) return true;
+      travelNode = travelNode.nextNode;
     }
 
     return false;
@@ -120,12 +121,11 @@ class LinkedList {
     }
 
     let index = 0;
-    let travelNode = new Node();
-    travelNode.nextNode = this.headNode;
+    let travelNode = this.headNode;
 
-    while(travelNode.nextNode !== null) {
-      travelNode = travelNode.nextNode;
+    while(travelNode !== null) {
       if (travelNode.value === value) return index;
+      travelNode = travelNode.nextNode;
       index++;
     }
 
@@ -133,8 +133,7 @@ class LinkedList {
   }
 
   insertAt(index, ...values) {
-
-    if (index < 0 || index > this.size()) {
+    if (index < 0 || index > this.currSize) {
       throw new RangeError("Index out of Range");
     }
 
@@ -145,32 +144,28 @@ class LinkedList {
       travelNode = travelNode.nextNode;
     }
 
+    // Inserting at travelNode -> (here) -> connectingNode
     let connectingNode = travelNode.nextNode;
-
-    let prevNode = new Node();
-    prevNode.value = values[0];
-
-    if (index === 0) {
-      this.headNode = prevNode;
-    }
-
-    travelNode.nextNode = prevNode;
-
-    for (let i = 1; i < values.length; i++) {
+    for (let i = values.length - 1; i >= 0; i--) {
       let node = new Node();
       node.value = values[i];
-      prevNode.nextNode = node;
-      prevNode = node;
+      node.nextNode = connectingNode;
+      connectingNode = node;
+      this.currSize++;
     }
+    travelNode.nextNode = connectingNode;
 
-    prevNode.nextNode = connectingNode;
+    if (index === 0) {
+      this.headNode = connectingNode;
+    }
   }
 
   removeAt(index) {
-    if (index < 0 || index > this.size() - 1) {
+    if (index < 0 || index > this.currSize - 1) {
       throw new RangeError("Index out of Range");
     } else if (index === 0) {
       this.headNode = this.headNode.nextNode;
+      this.currSize--;
       return;
     }
 
@@ -183,6 +178,7 @@ class LinkedList {
     let nextNode = travelNode.nextNode.nextNode;
 
     prevNode.nextNode = nextNode;
+    this.currSize--;
   }
 
   toString() {
